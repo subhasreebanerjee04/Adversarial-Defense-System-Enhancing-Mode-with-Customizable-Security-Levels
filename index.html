@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Adversarial Training</title>
+    <style>
+        /* Global Styles */
+        body {
+            font-family: 'Roboto', sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #000080, #1e3d58); /* Navy blue gradient */
+            color: #fff;
+            overflow: hidden;
+            box-sizing: border-box;
+        }
+
+        h1 {
+            font-family: 'Book Antiqua', serif;
+            text-align: center;
+            margin-top: 50px;
+            font-size: 3.5em;
+            font-weight: 700;
+            text-transform: uppercase;
+            text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.3);
+            letter-spacing: 2px;
+            color: #f0f0f0;
+        }
+
+        /* Form Styles */
+        form {
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 30px;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease-in-out;
+        }
+
+        form:hover {
+            transform: scale(1.02);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        label {
+            display: block;
+            font-size: 1.2em;
+            margin-bottom: 12px;
+            color: #333;
+            font-weight: 600;
+        }
+
+        select, button {
+            width: 100%;
+            padding: 14px;
+            margin-bottom: 20px;
+            border-radius: 10px;
+            font-size: 1.1em;
+            background-color: #f8f8f8;
+            border: 2px solid #ccc;
+            transition: all 0.3s ease;
+        }
+
+        select:focus, button:focus {
+            outline: none;
+            border-color: #4caf50;
+            box-shadow: 0 0 5px rgba(76, 175, 80, 0.6);
+        }
+
+        select {
+            background-color: #ffffff;
+            color: #333;
+        }
+
+        button {
+            background: #4caf50;
+            border: none;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.3s ease, transform 0.2s ease;
+        }
+
+        button:hover {
+            background: #45a049;
+            transform: translateY(-3px);
+        }
+
+        button:active {
+            background: #388e3c;
+            transform: translateY(0);
+        }
+
+        /* Output Window Styles */
+        #output-window {
+            width: 80%;
+            max-width: 600px;
+            margin: 30px auto;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 10px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+            color: #333;
+            font-size: 1.2em;
+            display: none; /* Hidden initially */
+            text-align: center;
+        }
+
+        /* Media Queries for Responsiveness */
+        @media (max-width: 1024px) {
+            h1 {
+                font-size: 3em;
+            }
+
+            form {
+                width: 80%;
+                margin: 20px auto;
+            }
+
+            select, button {
+                font-size: 1em;
+            }
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2.5em;
+            }
+
+            form {
+                width: 85%;
+            }
+        }
+
+        @media (max-width: 480px) {
+            h1 {
+                font-size: 2em;
+            }
+
+            form {
+                width: 90%;
+                margin: 10px auto;
+            }
+
+            select, button {
+                font-size: 0.9em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1>Adversarial Training System</h1>
+    <form id="training-form" method="POST">
+        <label for="security_level">Select Security Level:</label>
+        <select id="security_level" name="security_level">
+            <option value="low">Low</option>
+            <option value="medium">Medium</option>
+            <option value="high">High</option>
+        </select>
+        <button type="submit">Train Model</button>
+    </form>
+
+    <div id="output-window"></div>
+
+    <script>
+        // Handle form submission and display the result in the output window
+        document.getElementById("training-form").addEventListener("submit", function(event) {
+            event.preventDefault();
+
+            // Show loading message
+            const outputWindow = document.getElementById("output-window");
+            outputWindow.style.display = "block";
+            outputWindow.textContent = "Training in progress...";
+
+            // Create FormData object
+            const formData = new FormData(this);
+
+            // Send form data via AJAX to the Flask backend
+            fetch("/train", {
+                method: "POST",
+                body: formData
+            })
+            .then(response => response.text())
+            .then(data => {
+                // Display the result in the output window
+                outputWindow.textContent = data;
+            })
+            .catch(error => {
+                outputWindow.textContent = "Error: " + error.message;
+            });
+        });
+    </script>
+</body>
+</html>
